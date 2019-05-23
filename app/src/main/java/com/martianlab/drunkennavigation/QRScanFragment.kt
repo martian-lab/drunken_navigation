@@ -1,0 +1,162 @@
+package com.martianlab.drunkennavigation
+
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.SurfaceHolder
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.vision.CameraSource
+import com.google.android.gms.vision.barcode.Barcode
+import com.google.android.gms.vision.barcode.BarcodeDetector
+import kotlinx.android.synthetic.main.fragment_qr_scan.*
+import java.io.IOException
+import android.content.Intent
+import android.media.ToneGenerator
+import android.media.AudioManager
+import android.util.SparseArray
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.vision.Detector
+
+
+
+
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
+
+/**
+ * A simple [Fragment] subclass.
+ * Activities that contain this fragment must implement the
+ * [QRScanFragment.OnFragmentInteractionListener] interface
+ * to handle interaction events.
+ * Use the [QRScanFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ *
+ */
+class QRScanFragment : Fragment() {
+
+    lateinit var barcodeDetector : BarcodeDetector
+    lateinit var cameraSource : CameraSource
+
+
+
+    var scanResult = ""
+    lateinit var qRscanViewModel:QRscanViewModel
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_qr_scan, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        qRscanViewModel = ViewModelProviders.of(activity!!).get(QRscanViewModel::class.java)
+        initStuff()
+    }
+
+
+    fun initStuff() {
+
+        /* Initializing objects */
+
+        barcodeDetector = BarcodeDetector.Builder(context)
+            .setBarcodeFormats(Barcode.QR_CODE)
+            .build()
+
+        setProcessor()
+
+        cameraSource = CameraSource.Builder(context, barcodeDetector)
+            .setRequestedPreviewSize(1024, 768)
+            .setAutoFocusEnabled(true)
+            .build();
+
+        /* Adding Callback method to SurfaceView */
+        surfaceQRScanner.holder.addCallback(object : SurfaceHolder.Callback {
+
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                try {
+                    /* Asking user to allow access of camera */
+                    if (ActivityCompat.checkSelfPermission(
+                            context!!.applicationContext,
+                            Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        cameraSource.start(surfaceQRScanner.getHolder());
+                    } else {
+                        ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.CAMERA), 1024);
+                    }
+                } catch (e: IOException) {
+                    Log.e("Camera start error-->> ", e.message.toString())
+                }
+            }
+
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                cameraSource.stop()
+            }
+        });
+
+
+
+    }
+
+
+    fun setProcessor(){
+        /* Adding Processor to Barcode detector */
+        barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
+            override fun release() {}
+
+            override fun receiveDetections(detections: Detector.Detections<Barcode>) {
+                val barcodes = detections.detectedItems /* Retrieving QR Code */
+                if (barcodes.size() > 0) {
+
+                    barcodeDetector.release() /* Releasing barcodeDetector */
+
+                    val toneNotification = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100) /* Setting beep sound */
+                    toneNotification.startTone(ToneGenerator.TONE_PROP_BEEP, 150)
+
+                    scanResult = barcodes.valueAt(0).displayValue.toString() /* Retrieving text from QR Code */
+
+
+
+                    activity?.runOnUiThread {
+                        qRscanViewModel.setScannedText(scanResult)
+                        Toast.makeText(context, scanResult, Toast.LENGTH_LONG).show()
+                    }
+
+                    Thread.sleep(200)
+
+                    setProcessor()
+
+                }
+            }
+        })
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     *
+     *
+     * See the Android Training lesson [Communicating with Other Fragments]
+     * (http://developer.android.com/training/basics/fragments/communicating.html)
+     * for more information.
+     */
+
+}
