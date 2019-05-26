@@ -1,9 +1,7 @@
-package com.martianlab.drunkennavigation
+package com.martianlab.drunkennavigation.presentation
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,15 +15,16 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.fragment_qr_scan.*
 import java.io.IOException
-import android.content.Intent
 import android.media.ToneGenerator
 import android.media.AudioManager
-import android.util.SparseArray
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.vision.Detector
-
-
+import com.martianlab.drunkennavigation.DNaviApp
+import com.martianlab.drunkennavigation.R
+import com.martianlab.drunkennavigation.presentation.viewmodel.QRscanViewModel
+import javax.inject.Inject
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -47,10 +46,11 @@ class QRScanFragment : Fragment() {
     lateinit var barcodeDetector : BarcodeDetector
     lateinit var cameraSource : CameraSource
 
-
-
     var scanResult = ""
-    lateinit var qRscanViewModel:QRscanViewModel
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var qRscanViewModel: QRscanViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,8 +61,11 @@ class QRScanFragment : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        (activity?.application as DNaviApp).component.inject(this)
         super.onActivityCreated(savedInstanceState)
-        qRscanViewModel = ViewModelProviders.of(activity!!).get(QRscanViewModel::class.java)
+
+        //qRscanViewModel = ViewModelProviders.of(activity!!).get(QRscanViewModel::class.java)
+        qRscanViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(QRscanViewModel::class.java)
         initStuff()
     }
 

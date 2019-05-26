@@ -1,20 +1,20 @@
-package com.martianlab.drunkennavigation
+package com.martianlab.drunkennavigation.presentation
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.martianlab.drunkennavigation.DNaviApp
+import com.martianlab.drunkennavigation.R
 import com.martianlab.drunkennavigation.databinding.FragmentItemListBinding
-
-import kotlinx.android.synthetic.main.fragment_item_list.*
+import com.martianlab.drunkennavigation.presentation.adapters.MyItemRecyclerViewAdapter
+import com.martianlab.drunkennavigation.presentation.viewmodel.QRscanViewModel
+import javax.inject.Inject
 
 /**
  * A fragment representing a list of Items.
@@ -23,10 +23,12 @@ import kotlinx.android.synthetic.main.fragment_item_list.*
  */
 class ListFragment : Fragment() {
 
-    lateinit var qRscanViewModel:QRscanViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var qRscanViewModel: QRscanViewModel
     lateinit var binding : FragmentItemListBinding
 
-    lateinit var adapter:MyItemRecyclerViewAdapter
+    lateinit var adapter: MyItemRecyclerViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(
@@ -39,8 +41,11 @@ class ListFragment : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        (activity?.application as DNaviApp).component.inject(this)
         super.onActivityCreated(savedInstanceState)
-        qRscanViewModel = ViewModelProviders.of(activity!!).get(QRscanViewModel::class.java)
+        //qRscanViewModel = ViewModelProviders.of(activity!!).get(QRscanViewModel::class.java)
+        qRscanViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(QRscanViewModel::class.java)
+
 
         adapter = MyItemRecyclerViewAdapter(listOf())
 
