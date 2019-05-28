@@ -35,7 +35,7 @@ class SendWorker constructor(
         for( point in points ) {
             val id = point.id
 
-            dNaviService.postValues( id.toString(), point.guid, point.time, point.text ).enqueue( object :
+            dNaviService.postValues( id.toString(), point.guid, point.time.toString(), point.text ).enqueue( object :
                 Callback<TochResponse> {
                 override fun onFailure(call: Call<TochResponse>, t: Throwable) {
                     appExecutors.mainThread().execute { Toast.makeText(context,"send failure", Toast.LENGTH_LONG).show() }

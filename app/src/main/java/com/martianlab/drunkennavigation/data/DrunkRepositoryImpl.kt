@@ -11,11 +11,12 @@ import com.martianlab.drunkennavigation.presentation.viewmodel.QRItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
 
 
-class DNaviRepository @Inject constructor(
+class DrunkRepositoryImpl @Inject constructor(
     private val appExecutors: AppExecutors,
     private val pointsDao: PointsDao,
     private val dNaviService: DNaviService
@@ -29,9 +30,10 @@ class DNaviRepository @Inject constructor(
     }
 
     override fun addPoint(item: QRItem) {
+
         appExecutors.diskIO().execute {
             val id = Random.nextLong()
-            val point = Point(id, runGuid, item.time, item.text, item.type, false)
+            val point = Point(id, runGuid, Date().time, item.text, item.type, false)
 
             println(point)
 

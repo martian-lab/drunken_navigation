@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(
-    indices = [Index("run_guid")]
+    indices = [Index(value=["run_guid", "text"], unique = true)]
 )
 data class Point(
 
@@ -17,7 +17,7 @@ data class Point(
     @ColumnInfo(name = "run_guid")
     val guid : String,
     @ColumnInfo(name = "time")
-    val time:String,
+    val time : Long,
     @ColumnInfo(name = "text")
     val text : String,
     @ColumnInfo(name = "type")

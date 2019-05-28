@@ -55,7 +55,7 @@ class ListFragment : Fragment() {
                 result-> adapter.setValues(result)
 
         })
-
+        qRscanViewModel._param.value = "000"
 
         // Set the adapter
         binding.list.adapter = adapter

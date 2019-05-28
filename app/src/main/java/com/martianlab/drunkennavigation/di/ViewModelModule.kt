@@ -3,7 +3,7 @@ package com.martianlab.drunkennavigation.di
 import androidx.lifecycle.ViewModelProvider
 import com.martianlab.drunkennavigation.data.DrunkViewModelFactory
 import com.martianlab.drunkennavigation.domain.DrunkRepository
-import com.martianlab.drunkennavigation.model.DNaviRepository
+import com.martianlab.drunkennavigation.model.DrunkRepositoryImpl
 
 
 import dagger.Binds
@@ -16,7 +16,7 @@ interface ViewModelModule {
 
     @Singleton
     @Binds
-    fun provideLoginRepository(drunkRepository: DNaviRepository): DrunkRepository
+    fun provideLoginRepository(drunkRepositoryImpl: DrunkRepositoryImpl): DrunkRepository
 
     @Singleton
     @Binds

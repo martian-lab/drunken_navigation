@@ -138,7 +138,7 @@ class QRScanFragment : Fragment() {
 
                     activity?.runOnUiThread {
                         qRscanViewModel.setScannedText(scanResult)
-                        Toast.makeText(context, scanResult, Toast.LENGTH_LONG).show()
+                        //Toast.makeText(context, scanResult, Toast.LENGTH_LONG).show()
                     }
 
                     Thread.sleep(200)

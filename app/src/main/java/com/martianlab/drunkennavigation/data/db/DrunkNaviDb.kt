@@ -27,7 +27,7 @@ import com.martianlab.drunkennavigation.data.db.entities.Point
  */
 @Database(
     entities = [Point::class],
-    version = 1,
+    version = 3,
     exportSchema = true
 )
 abstract class DrunkNaviDb : RoomDatabase() {

@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.martianlab.drunkennavigation.domain.DrunkRepository
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -13,19 +15,16 @@ class QRscanViewModel(private val repository: DrunkRepository ) : ViewModel() {
 
     var state = AppState.WAIT
 
-    private val _param = MutableLiveData<String>()
+    val _param = MutableLiveData<String>()
 
-    private val list : MutableSet<QRItem> = mutableSetOf()
 
     val items : LiveData<List<QRItem>> = Transformations.switchMap(_param ){
-        Transformations.map( repository.getPoints(), { it.map { p->QRItem(p.time, p.text, p.type )} } )
+        Transformations.map( repository.getPoints(), { it.map { p->QRItem( SimpleDateFormat("dd/MM/yyyy hh:ss").format(Date(p.time)), p.text, p.type )} } )
     }
 
     fun setScannedText(text:String){
-        val item =
-            QRItem(Calendar.getInstance().getTime().toString(), text, 0)
-        list.add(item)
-        repository.addPoint(item)
+
+        repository.addPoint( QRItem(Calendar.getInstance().getTime().toString(), text, 0) )
 
         retry()
     }
