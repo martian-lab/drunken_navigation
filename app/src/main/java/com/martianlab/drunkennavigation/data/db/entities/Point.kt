@@ -11,8 +11,9 @@ import androidx.room.PrimaryKey
 )
 data class Point(
 
-    @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true)
-    val id:Long,
+    @ColumnInfo(name = "id")
+    @PrimaryKey(autoGenerate = true)
+    var id:Long = 0,
     @ColumnInfo(name = "run_guid")
     val guid : String,
     @ColumnInfo(name = "time")

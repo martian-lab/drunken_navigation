@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-package com.martianlab.drunkennavigation.data.db
+package com.android.example.github.util
 
-
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import com.martianlab.drunkennavigation.data.db.PointsDao
-import com.martianlab.drunkennavigation.data.db.entities.Point
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
 
 /**
- * Main database description.
+ * a kotlin friendly mock that handles generics
  */
-@Database(
-    entities = [Point::class],
-    version = 1,
-    exportSchema = true
-)
-abstract class DrunkNaviDb : RoomDatabase() {
+inline fun <reified T> mock(): T = Mockito.mock(T::class.java)
 
-    abstract fun pointsDao(): PointsDao
-}
+inline fun <reified T> argumentCaptor(): ArgumentCaptor<T> = ArgumentCaptor.forClass(T::class.java)

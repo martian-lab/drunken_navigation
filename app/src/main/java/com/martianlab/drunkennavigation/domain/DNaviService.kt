@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.martianlab.drunkennavigation.model
+package com.martianlab.drunkennavigation.domain
 
 
 import com.martianlab.drunkennavigation.data.db.TochResponse

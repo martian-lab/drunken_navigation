@@ -2,6 +2,7 @@ package com.martianlab.drunkennavigation.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.martianlab.drunkennavigation.R
 import com.martianlab.drunkennavigation.di.DaggerActivity
@@ -10,6 +11,7 @@ import javax.inject.Inject
 
 class MainActivity : DaggerActivity() {
 
+    //lateinit var qRscanViewModel : ViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

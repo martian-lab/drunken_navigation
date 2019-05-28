@@ -1,18 +1,21 @@
 package com.martianlab.drunkennavigation.domain
 
 import android.content.Context
+import android.widget.Toast
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.martianlab.drunkennavigation.data.db.PointsDao
-import com.martianlab.drunkennavigation.model.DNaviService
+import com.martianlab.drunkennavigation.data.db.TochResponse
 import com.martianlab.drunkennavigation.model.tools.AppExecutors
-import javax.inject.Inject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Singleton
 
 @Singleton
-class SendWorker @Inject constructor(
+class SendWorker constructor(
     private val context: Context,
-    private val params : WorkerParameters,
+    params : WorkerParameters,
     private val appExecutors: AppExecutors,
     private val pointsDao: PointsDao,
     private val dNaviService: DNaviService
@@ -21,14 +24,34 @@ class SendWorker @Inject constructor(
 
 
     override fun doWork(): Result {
-        send()
+
+        appExecutors.diskIO().execute { send() }
         return Result.success()
     }
 
     fun send(){
-        val points = pointsDao.getAllUnsentBySessId("000")
-        for( point in points.value.orEmpty() ) {
-            dNaviService.postValues( point.id.toString(), point.guid, point.time, point.text )
+        val points = pointsDao.getAllUnsent()
+
+        for( point in points ) {
+            val id = point.id
+
+            dNaviService.postValues( id.toString(), point.guid, point.time, point.text ).enqueue( object :
+                Callback<TochResponse> {
+                override fun onFailure(call: Call<TochResponse>, t: Throwable) {
+                    appExecutors.mainThread().execute { Toast.makeText(context,"send failure", Toast.LENGTH_LONG).show() }
+                    //do smth
+                }
+
+                override fun onResponse(call: Call<TochResponse>, response: Response<TochResponse>) {
+                    if (response.isSuccessful()) {
+                        pointsDao.setSent(id)
+                        appExecutors.mainThread().execute { Toast.makeText(context,"send success", Toast.LENGTH_LONG).show() }
+                    } else {
+                        appExecutors.mainThread().execute { Toast.makeText(context,"send failure", Toast.LENGTH_LONG).show() }
+                    }
+                }
+
+            })
         }
     }
 

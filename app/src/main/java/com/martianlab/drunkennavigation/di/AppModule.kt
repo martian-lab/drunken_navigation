@@ -20,7 +20,7 @@ import android.app.Application
 import androidx.room.Room
 import com.martianlab.drunkennavigation.data.db.DrunkNaviDb
 import com.martianlab.drunkennavigation.data.db.PointsDao
-import com.martianlab.drunkennavigation.model.DNaviService
+import com.martianlab.drunkennavigation.domain.DNaviService
 import com.martianlab.drunkennavigation.model.tools.AppExecutors
 import dagger.Module
 import dagger.Provides
@@ -32,7 +32,7 @@ import javax.inject.Singleton
 class AppModule {
     @Singleton
     @Provides
-    fun provideDNaviService(): DNaviService {
+    fun provideDNaviService( pointsDao: PointsDao ): DNaviService {
         return Retrofit.Builder()
             .baseUrl("https://dr.tochilov.ru/")
             .addConverterFactory(GsonConverterFactory.create())

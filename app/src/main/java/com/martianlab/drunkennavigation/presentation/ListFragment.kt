@@ -26,6 +26,7 @@ class ListFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var qRscanViewModel: QRscanViewModel
+
     lateinit var binding : FragmentItemListBinding
 
     lateinit var adapter: MyItemRecyclerViewAdapter
@@ -50,7 +51,7 @@ class ListFragment : Fragment() {
         adapter = MyItemRecyclerViewAdapter(listOf())
 
 
-        qRscanViewModel.getItems().observe(viewLifecycleOwner, Observer {
+        qRscanViewModel.items.observe(viewLifecycleOwner, Observer {
                 result-> adapter.setValues(result)
 
         })

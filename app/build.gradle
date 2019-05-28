@@ -23,8 +23,8 @@ android {
         enabled = true
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 }
 
@@ -62,7 +62,10 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:${versions.dagger}"
     kapt "com.google.dagger:dagger-android-processor:${versions.dagger}"
 
+    testImplementation 'android.arch.core:core-testing:1.1.1'
+    androidTestImplementation 'android.arch.core:core-testing:1.1.1'
     testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'

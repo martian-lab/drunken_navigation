@@ -17,7 +17,9 @@
 package com.martianlab.drunkennavigation.di
 
 import android.app.Application
+import android.content.Context
 import com.martianlab.drunkennavigation.DNaviApp
+import com.martianlab.drunkennavigation.domain.SendWorkerFactory
 import com.martianlab.drunkennavigation.presentation.ListFragment
 import com.martianlab.drunkennavigation.presentation.QRScanFragment
 import dagger.BindsInstance
@@ -36,7 +38,21 @@ interface AppComponent {
         fun build(): AppComponent
     }
 
+//    companion object {
+//
+//        // For Singleton instantiation
+//        @Volatile
+//        private var instance: AppComponent? = null
+//
+//        fun getInstance(context: Context): AppComponent {
+//            return instance ?: synchronized(this) {
+//                instance ?: buildDatabase(context).also { instance = it }
+//            }
+//        }
+//    }
+
     fun inject(app: DNaviApp)
     fun inject(fragment : ListFragment )
     fun inject(fragment : QRScanFragment )
+    fun inject(factory : SendWorkerFactory)
 }

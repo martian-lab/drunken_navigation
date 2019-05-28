@@ -18,10 +18,18 @@ package com.martianlab.drunkennavigation
 
 import android.app.Activity
 import android.app.Application
+import android.util.Log
+import androidx.work.Configuration
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.martianlab.drunkennavigation.di.AppComponent
 import com.martianlab.drunkennavigation.di.DaggerAppComponent
+import com.martianlab.drunkennavigation.domain.SendWorker
+import com.martianlab.drunkennavigation.domain.SendWorkerFactory
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -35,7 +43,20 @@ class DNaviApp : Application(), HasActivityInjector {
         super.onCreate()
         component =  DaggerAppComponent.builder().application(this).build()
         component.inject(this)
+
+        val configuration = Configuration.Builder()
+            .setMinimumLoggingLevel(Log.VERBOSE)
+            .setWorkerFactory(SendWorkerFactory())
+            .build()
+
+        WorkManager.initialize(this, configuration)
+
+        val workRequest : PeriodicWorkRequest.Builder = PeriodicWorkRequest.Builder(SendWorker::class.java, 24, TimeUnit.HOURS)
+
+        WorkManager.getInstance().enqueueUniquePeriodicWork("sendTochUpdates", ExistingPeriodicWorkPolicy.KEEP, workRequest.build() )
     }
+
+
 
     override fun activityInjector() = dispatchingAndroidInjector
 }
