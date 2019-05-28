@@ -21,6 +21,7 @@ import androidx.room.Room
 import com.martianlab.drunkennavigation.data.db.DrunkNaviDb
 import com.martianlab.drunkennavigation.data.db.PointsDao
 import com.martianlab.drunkennavigation.model.DNaviService
+import com.martianlab.drunkennavigation.model.tools.AppExecutors
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -54,6 +55,10 @@ class AppModule {
     fun providePointDao(db: DrunkNaviDb): PointsDao {
         return db.pointsDao()
     }
+
+    @Singleton
+    @Provides
+    fun provideExecutors() : AppExecutors = AppExecutors()
 
 
 }

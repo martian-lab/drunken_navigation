@@ -16,11 +16,11 @@ data class Point(
     @ColumnInfo(name = "run_guid")
     val guid : String,
     @ColumnInfo(name = "time")
-    val time:Int,
+    val time:String,
     @ColumnInfo(name = "text")
     val text : String,
     @ColumnInfo(name = "type")
-    val type: String,
+    val type: Int,
     @ColumnInfo(name = "sent")
     var sent: Boolean = false
 

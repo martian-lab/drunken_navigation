@@ -10,7 +10,7 @@ import java.util.*
 class QRscanViewModel(private val repository: DrunkRepository) : ViewModel() {
 
 
-    var state = AppState.INIT
+    var state = AppState.WAIT
 
     private val list : MutableSet<QRItem> = mutableSetOf()
 
@@ -21,6 +21,7 @@ class QRscanViewModel(private val repository: DrunkRepository) : ViewModel() {
         val item =
             QRItem(Calendar.getInstance().getTime().toString(), text, 0)
         list.add(item)
+        repository.addPoint(item)
 
         items.value = list.toList()
     }
@@ -37,5 +38,5 @@ data class QRItem(val time:String, val text: String, val type:Int){
 }
 
 enum class AppState{
-    INIT, START, NAVIGATION
+    WAIT, START, NAVIGATION
 }
