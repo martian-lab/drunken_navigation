@@ -81,7 +81,7 @@ class QRScanFragment : Fragment() {
         setProcessor()
 
         cameraSource = CameraSource.Builder(context, barcodeDetector)
-            .setRequestedPreviewSize(1024, 768)
+            .setRequestedPreviewSize(768, 768)
             .setAutoFocusEnabled(true)
             .build();
 
@@ -125,6 +125,7 @@ class QRScanFragment : Fragment() {
 
             override fun receiveDetections(detections: Detector.Detections<Barcode>) {
                 val barcodes = detections.detectedItems /* Retrieving QR Code */
+
                 if (barcodes.size() > 0) {
 
                     barcodeDetector.release() /* Releasing barcodeDetector */
@@ -138,6 +139,7 @@ class QRScanFragment : Fragment() {
 
                     activity?.runOnUiThread {
                         qRscanViewModel.setScannedText(scanResult)
+                        //println( scanResult )
                         //Toast.makeText(context, scanResult, Toast.LENGTH_LONG).show()
                     }
 
