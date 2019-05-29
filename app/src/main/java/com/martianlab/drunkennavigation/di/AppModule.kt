@@ -17,9 +17,12 @@
 package com.martianlab.drunkennavigation.di
 
 import android.app.Application
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import androidx.room.Room
 import com.martianlab.drunkennavigation.data.db.DrunkNaviDb
 import com.martianlab.drunkennavigation.data.db.PointsDao
+import com.martianlab.drunkennavigation.data.db.UserDao
 import com.martianlab.drunkennavigation.domain.DNaviService
 import com.martianlab.drunkennavigation.model.tools.AppExecutors
 import dagger.Module
@@ -32,7 +35,7 @@ import javax.inject.Singleton
 class AppModule {
     @Singleton
     @Provides
-    fun provideDNaviService( pointsDao: PointsDao ): DNaviService {
+    fun provideDNaviService(): DNaviService {
         return Retrofit.Builder()
             .baseUrl("https://dr.tochilov.ru/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -58,7 +61,18 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun provideUserDao(db: DrunkNaviDb): UserDao {
+        return db.userDao()
+    }
+
+    @Singleton
+    @Provides
     fun provideExecutors() : AppExecutors = AppExecutors()
+
+
+    @Singleton
+    @Provides
+    fun providePreferences( app: Application ) : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(app)
 
 
 }

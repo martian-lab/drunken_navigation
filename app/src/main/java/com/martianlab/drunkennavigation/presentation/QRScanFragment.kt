@@ -1,6 +1,7 @@
 package com.martianlab.drunkennavigation.presentation
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -64,7 +65,6 @@ class QRScanFragment : Fragment() {
         (activity?.application as DNaviApp).component.inject(this)
         super.onActivityCreated(savedInstanceState)
 
-        //qRscanViewModel = ViewModelProviders.of(activity!!).get(QRscanViewModel::class.java)
         qRscanViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(QRscanViewModel::class.java)
         initStuff()
     }
@@ -88,21 +88,9 @@ class QRScanFragment : Fragment() {
         /* Adding Callback method to SurfaceView */
         surfaceQRScanner.holder.addCallback(object : SurfaceHolder.Callback {
 
+            @SuppressLint("MissingPermission")
             override fun surfaceCreated(holder: SurfaceHolder) {
-                try {
-                    /* Asking user to allow access of camera */
-                    if (ActivityCompat.checkSelfPermission(
-                            context!!.applicationContext,
-                            Manifest.permission.CAMERA
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
                         cameraSource.start(surfaceQRScanner.getHolder());
-                    } else {
-                        ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.CAMERA), 1024);
-                    }
-                } catch (e: IOException) {
-                    Log.e("Camera start error-->> ", e.message.toString())
-                }
             }
 
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -111,11 +99,10 @@ class QRScanFragment : Fragment() {
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 cameraSource.stop()
             }
-        });
-
-
+        })
 
     }
+
 
 
     fun setProcessor(){
@@ -152,16 +139,5 @@ class QRScanFragment : Fragment() {
         })
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
 
 }

@@ -21,16 +21,18 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.martianlab.drunkennavigation.data.db.PointsDao
 import com.martianlab.drunkennavigation.data.db.entities.Point
+import com.martianlab.drunkennavigation.data.db.entities.User
 
 /**
  * Main database description.
  */
 @Database(
-    entities = [Point::class],
-    version = 3,
+    entities = [Point::class, User::class],
+    version = 4,
     exportSchema = true
 )
 abstract class DrunkNaviDb : RoomDatabase() {
 
     abstract fun pointsDao(): PointsDao
+    abstract fun userDao(): UserDao
 }

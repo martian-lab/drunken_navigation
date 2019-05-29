@@ -2,6 +2,7 @@ package com.martianlab.drunkennavigation.domain
 
 import androidx.lifecycle.LiveData
 import com.martianlab.drunkennavigation.data.db.entities.Point
+import com.martianlab.drunkennavigation.data.db.entities.User
 import com.martianlab.drunkennavigation.presentation.viewmodel.QRItem
 
 interface DrunkRepository {
@@ -9,4 +10,9 @@ interface DrunkRepository {
     fun addPoint(item:QRItem)
 
     fun getPoints() : LiveData<List<Point>>
+
+    fun getUserByPin(pin:Int) : LiveData<User>
+
+    fun getUser(id:Long) : LiveData<User>
+
 }
