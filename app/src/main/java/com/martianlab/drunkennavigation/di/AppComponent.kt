@@ -21,6 +21,7 @@ import android.content.Context
 import com.martianlab.drunkennavigation.DNaviApp
 import com.martianlab.drunkennavigation.domain.SendWorkerFactory
 import com.martianlab.drunkennavigation.presentation.ListFragment
+import com.martianlab.drunkennavigation.presentation.LoginFragment
 import com.martianlab.drunkennavigation.presentation.QRScanFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -54,5 +55,7 @@ interface AppComponent {
     fun inject(app: DNaviApp)
     fun inject(fragment : ListFragment )
     fun inject(fragment : QRScanFragment )
+    fun inject(fragment : LoginFragment)
     fun inject(factory : SendWorkerFactory)
+
 }
