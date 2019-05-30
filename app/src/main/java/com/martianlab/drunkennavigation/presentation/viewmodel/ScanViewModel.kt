@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.martianlab.drunkennavigation.data.db.entities.User
 import com.martianlab.drunkennavigation.domain.DrunkRepository
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -20,7 +21,9 @@ class ScanViewModel(private val repository: DrunkRepository ) : ViewModel() {
 
 
     val _param = MutableLiveData<String>()
+    val _pin = MutableLiveData<Int>()
 
+    val user: LiveData<User> = Transformations.switchMap(_pin ){ repository.getUserByPin(it) }
 
     val items : LiveData<List<QRItem>> = Transformations.switchMap(_param ){
         Transformations.map( repository.getPoints(), { it.map { p->QRItem( SimpleDateFormat("hh:m:ss").format(Date(p.time)), p.text, p.type )} } )
@@ -36,6 +39,21 @@ class ScanViewModel(private val repository: DrunkRepository ) : ViewModel() {
     fun retry(){
         _param.value?.let { _param.value = it }
     }
+
+
+    fun isValid(text: String) : Boolean = repository.isTochilovs(text)
+
+    fun isFinish(text: String) : Boolean = repository.isFinish(text)
+
+    fun setPin(text: String ){
+        _pin.value = text.toInt()
+    }
+
+    fun isLogged() : Boolean = repository.isLogged()
+
+    fun getState() = repository.getState()
+
+    fun logout() = repository.logout()
 
 }
 

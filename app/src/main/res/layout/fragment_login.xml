@@ -12,6 +12,7 @@
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
+
                 tools:text="1111"
                 android:ems="10"
                 android:id="@+id/pin" android:layout_marginTop="8dp"
@@ -20,6 +21,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginRight="8dp" android:layout_marginStart="8dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp" android:textSize="48sp"/>
+        <Button
+                android:text="Go!"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/gobutton" app:layout_constraintStart_toEndOf="@+id/pin" android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/pin"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

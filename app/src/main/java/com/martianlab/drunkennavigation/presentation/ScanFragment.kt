@@ -111,20 +111,27 @@ class ScanFragment : Fragment() {
 
                     barcodeDetector.release() /* Releasing barcodeDetector */
 
-                    val toneNotification = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100) /* Setting beep sound */
-                    toneNotification.startTone(ToneGenerator.TONE_PROP_BEEP, 150)
 
                     scanResult = barcodes.valueAt(0).displayValue.toString() /* Retrieving text from QR Code */
 
+                    if( qRscanViewModel.isValid(scanResult )){
 
+                        val toneNotification = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100) /* Setting beep sound */
+                        toneNotification.startTone(ToneGenerator.TONE_PROP_BEEP, 150)
 
-                    activity?.runOnUiThread {
-                        qRscanViewModel.setScannedText(scanResult)
-                        //println( scanResult )
-                        //Toast.makeText(context, scanResult, Toast.LENGTH_LONG).show()
+                        activity?.runOnUiThread {
+                            qRscanViewModel.setScannedText(scanResult)
+                            //println( scanResult )
+                            //Toast.makeText(context, scanResult, Toast.LENGTH_LONG).show()
+                        }
+
+                        if( qRscanViewModel.isFinish(scanResult) ){
+
+                        }
                     }
 
-                    Thread.sleep(200)
+
+                    Thread.sleep(1000)
 
                     setProcessor()
 

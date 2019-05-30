@@ -16,6 +16,11 @@ interface DrunkRepository {
 
     fun getUser(id:Int) : LiveData<User>
 
+    fun isTochilovs(text: String): Boolean
+    fun isFinish(text: String): Boolean
+    fun logout()
+    fun isLogged(): Boolean
+    fun getState() : LiveData<NaviState>
 }
 
 enum class Points(val num:Int, val text:String){
@@ -36,6 +41,6 @@ enum class Points(val num:Int, val text:String){
 
 }
 
-enum class NaviState{
-    WAIT, START, NAVIGATION
+enum class NaviState(val num:Int){
+    WAIT(0), RUN(1)
 }

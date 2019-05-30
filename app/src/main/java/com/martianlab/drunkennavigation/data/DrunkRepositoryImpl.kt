@@ -2,6 +2,8 @@ package com.martianlab.drunkennavigation.data
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.martianlab.drunkennavigation.data.db.PointsDao
 import com.martianlab.drunkennavigation.data.db.TochResponse
 import com.martianlab.drunkennavigation.data.db.UserDao
@@ -34,37 +36,78 @@ class DrunkRepositoryImpl @Inject constructor(
     private val preferences: SharedPreferences
 ) : DrunkRepository {
 
-    private val userId : Int
-    lateinit var runGuid : String
-    var state = NaviState.WAIT
+    private var userId : Int
+    private var runGuid : String? = null
+    var state : NaviState
+    var stateLD : MutableLiveData<NaviState> = MutableLiveData()
+
+    var user = MutableLiveData<User>()
 
     init{
-        userId = preferences.getInt("user_id", 0)
-        runGuid = "000"
+        state = when( preferences.getInt("curr_state", -1) ){
+            1 -> NaviState.RUN
+            else -> NaviState.WAIT
+        }
+        stateLD.value = state
+        userId = preferences.getInt("user_id", -1)
+        user.observeForever({
+            it?.let {
+                userId = it.id
+                preferences.edit().putInt("user_id", it.id).apply()
+            }
+        })
     }
 
 
 
 
-    override fun getPoints(): LiveData<List<Point>> {
+    override fun getPoints(): LiveData<List<Point>> =
+        if( runGuid != null )
+            pointsDao.getAllBySessId(runGuid!!)
 
-        return pointsDao.getAllBySessId(runGuid)
-    }
+        else MutableLiveData<List<Point>>()
 
 
 
-    override fun addPoint(text: String ) {
+
+    override fun addPoint(text: String) {
 
         if( !isTochilovs(text) )
             return
 
+        when( getPointType(text) ){
+            Points.START ->
+                if( state == NaviState.WAIT ){
+                    runGuid = UUID.randomUUID().toString()
+                    state = NaviState.RUN
+                    stateLD.value = state
+                }else
+                    return
+
+            Points.AE, Points.KP ->
+                if( state != NaviState.RUN )
+                    return
+
+            Points.FINISH ->
+                if( state != NaviState.RUN )
+                    return
+                else{
+                    state = NaviState.WAIT
+                    stateLD.value = state
+                }
+
+        }
+
+
+
+
         appExecutors.diskIO().execute {
             val id = Random.nextLong()
-            val point = Point(id, runGuid, Date().time, text, getPointType(text).num )
+            val point = Point(id, runGuid!!, Date().time, text, getPointType(text).num )
 
             pointsDao.insert( point )
 
-            dNaviService.postValues( TOKEN, userId, runGuid, point.time, text ).enqueue( object :
+            dNaviService.postValues( TOKEN, userId, runGuid!!, point.time, text ).enqueue( object :
                 Callback<TochResponse> {
                 override fun onFailure(call: Call<TochResponse>, t: Throwable) {
 
@@ -84,23 +127,57 @@ class DrunkRepositoryImpl @Inject constructor(
                 }
 
             })
+
+            if( getPointType(text) == Points.FINISH )
+                runGuid = null
+
         }
+
+//        when( getPointType(text) ){
+//
+//            Points.FINISH ->
+//                if( state == NaviState.RUN ){
+//                    state = NaviState.WAIT
+//                    stateLD.value = state
+//                    runGuid = null
+//                }
+//        }
 
     }
 
-    override fun getUserByPin(pin: Int) = userDao.getByPin(pin)
+    override fun getUserByPin(pin: Int):LiveData<User> {
+        val res = userDao.getByPin(pin)
+        res.observeForever { user.value = it }
+
+        return user
+    }
 
 
     override fun getUser(id: Int) = userDao.getById( id )
 
-
+    override fun logout(){
+        preferences.edit().putInt("user_id", -1).apply()
+        user.value = null
+        userId = -1
+        state = NaviState.WAIT
+        stateLD.value = state
+        runGuid = null
+        println("islogged1=" + isLogged())
+    }
 
     fun getPointType(text: String):Points{
         val point = text.substring(24,text.length-1)
         return Points.getPointByText(point.substring(0,1))
     }
 
-    fun isTochilovs(text: String):Boolean = text.contains("http://dr.tochilov.ru/c/")
+    override fun isTochilovs(text: String):Boolean = text.contains("http://dr.tochilov.ru/c/")
+
+    override fun isFinish( text: String) : Boolean = getPointType(text) == Points.FINISH
+
+    override fun isLogged() = userId > 0
+
+
+    override fun getState() = stateLD
 }
 
 
