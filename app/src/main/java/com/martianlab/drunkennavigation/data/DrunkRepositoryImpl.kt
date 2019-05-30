@@ -1,4 +1,4 @@
-package com.martianlab.drunkennavigation.model
+package com.martianlab.drunkennavigation.data
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
@@ -9,16 +9,21 @@ import com.martianlab.drunkennavigation.data.db.entities.Point
 import com.martianlab.drunkennavigation.data.db.entities.User
 import com.martianlab.drunkennavigation.domain.DNaviService
 import com.martianlab.drunkennavigation.domain.DrunkRepository
+import com.martianlab.drunkennavigation.domain.NaviState
+import com.martianlab.drunkennavigation.domain.Points
 import com.martianlab.drunkennavigation.model.tools.AppExecutors
-import com.martianlab.drunkennavigation.presentation.viewmodel.QRItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.IllegalArgumentException
+import java.sql.Timestamp
 import java.util.*
 import java.util.prefs.Preferences
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
+
+const val TOKEN = "8a4deb84-1686-4a08-b32b-f0cbec5d8940"
 
 @Singleton
 class DrunkRepositoryImpl @Inject constructor(
@@ -29,11 +34,12 @@ class DrunkRepositoryImpl @Inject constructor(
     private val preferences: SharedPreferences
 ) : DrunkRepository {
 
-    private val userId : Long
+    private val userId : Int
     lateinit var runGuid : String
+    var state = NaviState.WAIT
 
     init{
-        userId = preferences.getLong("user_id", 0)
+        userId = preferences.getInt("user_id", 0)
         runGuid = "000"
     }
 
@@ -45,15 +51,20 @@ class DrunkRepositoryImpl @Inject constructor(
         return pointsDao.getAllBySessId(runGuid)
     }
 
-    override fun addPoint(item: QRItem) {
+
+
+    override fun addPoint(text: String ) {
+
+        if( !isTochilovs(text) )
+            return
 
         appExecutors.diskIO().execute {
             val id = Random.nextLong()
-            val point = Point(id, runGuid, Date().time, item.text, item.type, false)
+            val point = Point(id, runGuid, Date().time, text, getPointType(text).num )
 
             pointsDao.insert( point )
 
-            dNaviService.postValues( id.toString(), runGuid, item.time, item.text ).enqueue( object :
+            dNaviService.postValues( TOKEN, userId, runGuid, point.time, text ).enqueue( object :
                 Callback<TochResponse> {
                 override fun onFailure(call: Call<TochResponse>, t: Throwable) {
 
@@ -74,10 +85,22 @@ class DrunkRepositoryImpl @Inject constructor(
 
             })
         }
+
     }
 
     override fun getUserByPin(pin: Int) = userDao.getByPin(pin)
 
 
-    override fun getUser(id: Long) = userDao.getById( id )
+    override fun getUser(id: Int) = userDao.getById( id )
+
+
+
+    fun getPointType(text: String):Points{
+        val point = text.substring(24,text.length-1)
+        return Points.getPointByText(point.substring(0,1))
+    }
+
+    fun isTochilovs(text: String):Boolean = text.contains("http://dr.tochilov.ru/c/")
 }
+
+

@@ -9,11 +9,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.martianlab.drunkennavigation.DNaviApp
+import com.martianlab.drunkennavigation.DrunkApp
 import com.martianlab.drunkennavigation.R
-import com.martianlab.drunkennavigation.databinding.FragmentItemListBinding
-import com.martianlab.drunkennavigation.presentation.adapters.MyItemRecyclerViewAdapter
-import com.martianlab.drunkennavigation.presentation.viewmodel.QRscanViewModel
+import com.martianlab.drunkennavigation.databinding.FragmentListBinding
+import com.martianlab.drunkennavigation.presentation.adapters.PointRecyclerViewAdapter
+import com.martianlab.drunkennavigation.presentation.viewmodel.ScanViewModel
 import javax.inject.Inject
 
 /**
@@ -25,16 +25,16 @@ class ListFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var qRscanViewModel: QRscanViewModel
+    lateinit var qRscanViewModel: ScanViewModel
 
-    lateinit var binding : FragmentItemListBinding
+    lateinit var binding : FragmentListBinding
 
-    lateinit var adapter: MyItemRecyclerViewAdapter
+    lateinit var adapter: PointRecyclerViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_item_list,
+            R.layout.fragment_list,
             container,
             false
         )
@@ -42,13 +42,13 @@ class ListFragment : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        (activity?.application as DNaviApp).component.inject(this)
+        (activity?.application as DrunkApp).component.inject(this)
         super.onActivityCreated(savedInstanceState)
         //qRscanViewModel = ViewModelProviders.of(activity!!).get(QRscanViewModel::class.java)
-        qRscanViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(QRscanViewModel::class.java)
+        qRscanViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(ScanViewModel::class.java)
 
 
-        adapter = MyItemRecyclerViewAdapter(listOf())
+        adapter = PointRecyclerViewAdapter(listOf())
 
 
         qRscanViewModel.items.observe(viewLifecycleOwner, Observer {

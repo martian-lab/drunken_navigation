@@ -27,11 +27,12 @@ import retrofit2.http.Query
  */
 interface DNaviService {
 
-    @POST("/rest/")
+    @POST("/")
     fun postValues(
         @Query("token") token: String,
-        @Query("run_guid") run_guid: String,
-        @Query("ts") ts: String,
+        @Query("user_id") userId: Int,
+        @Query("run_guid") runGuid: String,
+        @Query("ts") ts: Long,
         @Query("text") test: String
     ): Call<TochResponse>
 }

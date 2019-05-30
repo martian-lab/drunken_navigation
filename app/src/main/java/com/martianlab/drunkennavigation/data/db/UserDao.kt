@@ -12,13 +12,13 @@ interface UserDao {
     fun getAll(): LiveData<List<User>>
 
     @Query("SELECT * FROM user WHERE id = :id")
-    fun getById(id: Long): LiveData<User>
+    fun getById(id: Int): LiveData<User>
 
     @Query("SELECT * FROM user WHERE pin = :pin")
     fun getByPin(pin: Int): LiveData<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg users: User)
+    fun insertAll(users: List<User>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: User)

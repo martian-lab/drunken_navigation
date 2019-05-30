@@ -13,9 +13,9 @@ data class User(
 
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
-    var id:Long = 0,
-    @ColumnInfo(name = "guid")
-    val guid : String?,
+    var id:Int = 0,
+//    @ColumnInfo(name = "guid")
+//    val guid : String?,
     @ColumnInfo(name = "name")
     val name : String,
     @ColumnInfo(name = "pin")

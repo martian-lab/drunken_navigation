@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.martianlab.drunkennavigation.DNaviApp
+import com.martianlab.drunkennavigation.DrunkApp
 
 import com.martianlab.drunkennavigation.R
-import com.martianlab.drunkennavigation.presentation.viewmodel.QRscanViewModel
+import com.martianlab.drunkennavigation.presentation.viewmodel.ScanViewModel
 import javax.inject.Inject
 
 
@@ -18,7 +18,7 @@ class LoginFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var qRscanViewModel: QRscanViewModel
+    lateinit var qRscanViewModel: ScanViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +30,7 @@ class LoginFragment : Fragment() {
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        (activity?.application as DNaviApp).component.inject(this)
+        (activity?.application as DrunkApp).component.inject(this)
         super.onActivityCreated(savedInstanceState)
 
 

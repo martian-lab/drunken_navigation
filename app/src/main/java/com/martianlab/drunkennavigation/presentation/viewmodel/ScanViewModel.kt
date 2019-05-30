@@ -11,12 +11,13 @@ import java.util.*
 
 const val START = 0
 const val KP = 1
-const val FINISH = 2
+const val EA = 2
+const val FINISH = 3
 
-class QRscanViewModel(private val repository: DrunkRepository ) : ViewModel() {
 
 
-    var state = AppState.WAIT
+class ScanViewModel(private val repository: DrunkRepository ) : ViewModel() {
+
 
     val _param = MutableLiveData<String>()
 
@@ -27,7 +28,7 @@ class QRscanViewModel(private val repository: DrunkRepository ) : ViewModel() {
 
     fun setScannedText(text:String){
 
-        repository.addPoint( QRItem(Calendar.getInstance().getTime().toString(), text, 0) )
+        repository.addPoint( text )
 
         retry()
     }
@@ -43,8 +44,4 @@ data class QRItem(val time:String, val text: String, val type:Int){
     override fun equals(other: Any?): Boolean {
         return this.text == (other as QRItem).text
     }
-}
-
-enum class AppState{
-    WAIT, START, NAVIGATION
 }

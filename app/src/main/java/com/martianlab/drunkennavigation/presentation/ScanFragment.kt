@@ -1,30 +1,24 @@
 package com.martianlab.drunkennavigation.presentation
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import kotlinx.android.synthetic.main.fragment_qr_scan.*
-import java.io.IOException
+import kotlinx.android.synthetic.main.fragment_scan.*
 import android.media.ToneGenerator
 import android.media.AudioManager
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.vision.Detector
-import com.martianlab.drunkennavigation.DNaviApp
+import com.martianlab.drunkennavigation.DrunkApp
 import com.martianlab.drunkennavigation.R
-import com.martianlab.drunkennavigation.presentation.viewmodel.QRscanViewModel
+import com.martianlab.drunkennavigation.presentation.viewmodel.ScanViewModel
 import javax.inject.Inject
 
 
@@ -36,13 +30,13 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [QRScanFragment.OnFragmentInteractionListener] interface
+ * [ScanFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [QRScanFragment.newInstance] factory method to
+ * Use the [ScanFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class QRScanFragment : Fragment() {
+class ScanFragment : Fragment() {
 
     lateinit var barcodeDetector : BarcodeDetector
     lateinit var cameraSource : CameraSource
@@ -51,21 +45,21 @@ class QRScanFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var qRscanViewModel: QRscanViewModel
+    lateinit var qRscanViewModel: ScanViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_qr_scan, container, false)
+        return inflater.inflate(R.layout.fragment_scan, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        (activity?.application as DNaviApp).component.inject(this)
+        (activity?.application as DrunkApp).component.inject(this)
         super.onActivityCreated(savedInstanceState)
 
-        qRscanViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(QRscanViewModel::class.java)
+        qRscanViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(ScanViewModel::class.java)
         initStuff()
     }
 

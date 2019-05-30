@@ -23,12 +23,13 @@ import com.martianlab.drunkennavigation.data.db.PointsDao
 import com.martianlab.drunkennavigation.data.db.entities.Point
 import com.martianlab.drunkennavigation.data.db.entities.User
 
+const val USER_DATA_FILENAME = "users.json"
 /**
  * Main database description.
  */
 @Database(
     entities = [Point::class, User::class],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 abstract class DrunkNaviDb : RoomDatabase() {

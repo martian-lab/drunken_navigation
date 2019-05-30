@@ -1,9 +1,9 @@
 package com.martianlab.drunkennavigation.di
 
 import androidx.lifecycle.ViewModelProvider
+import com.martianlab.drunkennavigation.data.DrunkRepositoryImpl
 import com.martianlab.drunkennavigation.data.DrunkViewModelFactory
 import com.martianlab.drunkennavigation.domain.DrunkRepository
-import com.martianlab.drunkennavigation.model.DrunkRepositoryImpl
 
 
 import dagger.Binds

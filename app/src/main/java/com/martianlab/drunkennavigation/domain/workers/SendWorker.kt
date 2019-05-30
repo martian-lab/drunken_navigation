@@ -1,11 +1,13 @@
-package com.martianlab.drunkennavigation.domain
+package com.martianlab.drunkennavigation.domain.workers
 
 import android.content.Context
 import android.widget.Toast
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.martianlab.drunkennavigation.data.TOKEN
 import com.martianlab.drunkennavigation.data.db.PointsDao
 import com.martianlab.drunkennavigation.data.db.TochResponse
+import com.martianlab.drunkennavigation.domain.DNaviService
 import com.martianlab.drunkennavigation.model.tools.AppExecutors
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,7 +27,7 @@ class SendWorker constructor(
 
     override fun doWork(): Result {
 
-        appExecutors.diskIO().execute { send() }
+        appExecutors.networkIO().execute { send() }
         return Result.success()
     }
 
@@ -35,7 +37,7 @@ class SendWorker constructor(
         for( point in points ) {
             val id = point.id
 
-            dNaviService.postValues( id.toString(), point.guid, point.time.toString(), point.text ).enqueue( object :
+            dNaviService.postValues( TOKEN, 0, point.guid, point.time, point.text ).enqueue( object :
                 Callback<TochResponse> {
                 override fun onFailure(call: Call<TochResponse>, t: Throwable) {
                     appExecutors.mainThread().execute { Toast.makeText(context,"send failure", Toast.LENGTH_LONG).show() }

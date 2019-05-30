@@ -16,6 +16,6 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context=".presentation.ListFragment"
-        tools:listitem="@layout/fragment_item"/>
+        tools:listitem="@layout/point_item"/>
 
 </layout>

@@ -2,19 +2,13 @@ package com.martianlab.drunkennavigation.presentation
 
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
 import com.martianlab.drunkennavigation.R
 import com.martianlab.drunkennavigation.di.DaggerActivity
-import com.martianlab.drunkennavigation.presentation.viewmodel.QRscanViewModel
-import kotlinx.android.synthetic.main.fragment_qr_scan.*
 import java.io.IOException
-import javax.inject.Inject
 
 class MainActivity : DaggerActivity() {
 

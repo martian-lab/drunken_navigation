@@ -19,21 +19,19 @@ package com.martianlab.drunkennavigation
 import android.app.Activity
 import android.app.Application
 import android.util.Log
-import androidx.work.Configuration
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import com.martianlab.drunkennavigation.di.AppComponent
 import com.martianlab.drunkennavigation.di.DaggerAppComponent
-import com.martianlab.drunkennavigation.domain.SendWorker
+import com.martianlab.drunkennavigation.domain.workers.SendWorker
 import com.martianlab.drunkennavigation.domain.SendWorkerFactory
+import com.martianlab.drunkennavigation.domain.workers.UserDatabaseWorker
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class DNaviApp : Application(), HasActivityInjector {
+class DrunkApp : Application(), HasActivityInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
@@ -54,6 +52,10 @@ class DNaviApp : Application(), HasActivityInjector {
         val workRequest : PeriodicWorkRequest.Builder = PeriodicWorkRequest.Builder(SendWorker::class.java, 24, TimeUnit.HOURS)
 
         WorkManager.getInstance().enqueueUniquePeriodicWork("sendTochUpdates", ExistingPeriodicWorkPolicy.KEEP, workRequest.build() )
+
+        val seedRequest : OneTimeWorkRequest.Builder = OneTimeWorkRequest.Builder(UserDatabaseWorker::class.java)
+
+        WorkManager.getInstance().enqueue(seedRequest.build() )
     }
 
 
