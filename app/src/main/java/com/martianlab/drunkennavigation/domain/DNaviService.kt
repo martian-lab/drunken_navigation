@@ -44,7 +44,7 @@ interface DNaviService {
 
     //http://dr.tochilov.ru/rest/users/8a4deb84-1686-4a08-b32b-f0cbec5d8940
 
-    @GET("/users/8a4deb84-1686-4a08-b32b-f0cbec5d8940")
+    @GET("/rest/users/8a4deb84-1686-4a08-b32b-f0cbec5d8940")
     fun getUsers(): Call<List<User>>
 
 }

@@ -21,6 +21,9 @@ class ScanViewModel(private val repository: DrunkRepository ) : ViewModel() {
 
 
     val _param = MutableLiveData<String>()
+    init{
+        _param.value = "000"
+    }
     val _pin = MutableLiveData<Int>()
 
     val user: LiveData<User> = Transformations.switchMap(_pin ){ repository.getUserByPin(it) }

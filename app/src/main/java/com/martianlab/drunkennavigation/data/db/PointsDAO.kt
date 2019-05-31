@@ -22,10 +22,10 @@ interface PointsDao {
     @Query("SELECT * FROM point WHERE id = :id")
     fun getById(id: Long): LiveData<Point>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vararg points: Point)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(points: Point)
 
     @Query("UPDATE point SET sent = 1 WHERE id = :id" )

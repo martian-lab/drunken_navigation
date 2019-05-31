@@ -47,37 +47,36 @@ class UserDatabaseWorker(
     override fun doWork(): Result =
 
         try {
-//            val userList = service.getUsers().enqueue(object :
-//                Callback<List<User>> {
-//                    override fun onFailure(call: Call<List<User>>, t: Throwable) {
-//                        println("error seeding database!" + t.message)
-//                    }
-//
-//                    override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
-//                        println("userList=" + response.body())
-//
-//                        appExecutors.networkIO().execute {
-//                            userDao.insertAll(response.body().orEmpty())
-//                        }
-//                        println("success seeding database!")
-//                        Result.success()
-//                    }
-//
-//            })
-//            Result.success()
-            applicationContext.assets.open(USER_DATA_FILENAME).use { inputStream ->
-                JsonReader(inputStream.reader()).use { jsonReader ->
-                    val userType = object : TypeToken<List<User>>() {}.type
-                    val userList: List<User> = Gson().fromJson(jsonReader, userType)
-                    println("userList=" + userList)
-
-                    appExecutors.networkIO().execute {
-                        userDao.insertAll(userList)
+            val userList = service.getUsers().enqueue(object :
+                Callback<List<User>> {
+                    override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                        println("error seeding database!" + t.message)
                     }
-                    println("success seeding database!")
-                    Result.success()
-                }
-            }
+
+                    override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+
+                        appExecutors.networkIO().execute {
+                            userDao.insertAll(response.body().orEmpty())
+                        }
+                        println("success seeding database!")
+                        Result.success()
+                    }
+
+            })
+            Result.success()
+//            applicationContext.assets.open(USER_DATA_FILENAME).use { inputStream ->
+//                JsonReader(inputStream.reader()).use { jsonReader ->
+//                    val userType = object : TypeToken<List<User>>() {}.type
+//                    val userList: List<User> = Gson().fromJson(jsonReader, userType)
+//                    println("userList=" + userList)
+//
+//                    appExecutors.networkIO().execute {
+//                        userDao.insertAll(userList)
+//                    }
+//                    println("success seeding database!")
+//                    Result.success()
+//                }
+//            }
         } catch (ex: Exception) {
             Log.e(TAG, "Error seeding database", ex)
             Result.failure()

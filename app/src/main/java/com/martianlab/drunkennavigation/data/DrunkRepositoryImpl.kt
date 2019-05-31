@@ -40,8 +40,8 @@ class DrunkRepositoryImpl @Inject constructor(
     private var runGuid : String? = null
     var state : NaviState
     var stateLD : MutableLiveData<NaviState> = MutableLiveData()
-
     var user = MutableLiveData<User>()
+    var list = MutableLiveData<List<Point>>()
 
     init{
         state = when( preferences.getInt("curr_state", -1) ){
@@ -61,11 +61,21 @@ class DrunkRepositoryImpl @Inject constructor(
 
 
 
-    override fun getPoints(): LiveData<List<Point>> =
-        if( runGuid != null )
-            pointsDao.getAllBySessId(runGuid!!)
+    override fun getPoints(): LiveData<List<Point>> {
+        println("get point")
 
+        val res = if( runGuid != null ) {
+            println( "get by guid=" + runGuid)
+            pointsDao.getAllBySessId(runGuid!!)
+        }
         else MutableLiveData<List<Point>>()
+
+        res.observeForever{list.value = it}
+
+        println("get point res=" + res )
+
+        return list
+    }
 
 
 
@@ -98,17 +108,18 @@ class DrunkRepositoryImpl @Inject constructor(
 
         }
 
-
+        println("point type=" + getPointType(text) )
 
 
         appExecutors.diskIO().execute {
             val id = Random.nextLong()
-            println( "guid=" + runGuid )
-            val point = Point(id, runGuid!!, Date().time, text, getPointType(text).num )
+
+            val point = Point(id, runGuid!!, Date().time, getPoint(text), getPointType(text).num )
+            println("point =" + point)
 
             pointsDao.insert( point )
 
-            dNaviService.postValues( TOKEN, userId, runGuid!!, point.time, text ).enqueue( object :
+            dNaviService.postValues( TOKEN, userId, runGuid!!, point.time, getPoint(text) ).enqueue( object :
                 Callback<Unit> {
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
 
@@ -118,11 +129,8 @@ class DrunkRepositoryImpl @Inject constructor(
 
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
 
-                    println("req=" + call.request() )
-                    println("on success, response=" + response.message() )
-
                     if (response.isSuccessful()) {
-                        pointsDao.setSent(id)
+                        appExecutors.diskIO().execute{pointsDao.setSent(id)}
                     } else {
                         // Handle other responses
                     }
@@ -170,16 +178,15 @@ class DrunkRepositoryImpl @Inject constructor(
         preferences.edit().putInt("user_id", -1).apply()
         user.value = null
         userId = -1
+        runGuid = null
         state = NaviState.WAIT
         stateLD.value = state
-        runGuid = null
-        println("islogged1=" + isLogged())
+        list.value = emptyList()
+        println("logout")
     }
 
-    fun getPointType(text: String):Points{
-        val point = text.substring(24,text.length-1)
-        return Points.getPointByText(point.substring(0,1))
-    }
+    fun getPointType(text: String):Points = Points.getPointByText(getPoint(text).substring(0,1))
+    fun getPoint(text: String) = text.substring(24,text.length-1)
 
     override fun isTochilovs(text: String):Boolean = text.contains("http://dr.tochilov.ru/c/")
 

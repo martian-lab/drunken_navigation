@@ -72,8 +72,9 @@ class ListFragment : Fragment() {
 
         qRscanViewModel.items.observe(viewLifecycleOwner, Observer {
                 result-> adapter.setValues(result.sortedBy { it.time })
-
         })
+
+        qRscanViewModel.retry()
 
         qRscanViewModel.getState().observe(viewLifecycleOwner, Observer {
 
@@ -83,7 +84,6 @@ class ListFragment : Fragment() {
 
         })
 
-        qRscanViewModel._param.value = "000"
 
         // Set the adapter
         binding.list.adapter = adapter
