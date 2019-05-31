@@ -46,7 +46,8 @@ class ScanViewModel(private val repository: DrunkRepository ) : ViewModel() {
     fun isFinish(text: String) : Boolean = repository.isFinish(text)
 
     fun setPin(text: String ){
-        _pin.value = text.toInt()
+        if( text.length == 4 )
+            _pin.value = text.toInt()
     }
 
     fun isLogged() : Boolean = repository.isLogged()

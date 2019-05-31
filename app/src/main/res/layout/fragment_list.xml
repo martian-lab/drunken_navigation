@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".presentation.ScanFragment">
+        tools:context=".presentation.ListFragment">
 
 <data>
 
@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".presentation.ListFragment"
             tools:listitem="@layout/point_item"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@id/button"/>

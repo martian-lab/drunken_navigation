@@ -54,10 +54,16 @@ class ListFragment : Fragment() {
         qRscanViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(ScanViewModel::class.java)
 
 
+        println("nav dest=" + findNavController()?.currentDestination?.label)
+
         button.setOnClickListener {
             qRscanViewModel.logout()
-            findNavController().navigate(R.id.action_scanListFragment_to_loginFragment)
-            println("navigate to login")
+
+            if( findNavController()?.currentDestination?.label?.equals("fragment_scan_list")?:false  )
+                findNavController().navigate(R.id.action_scanListFragment_to_loginFragment)
+            else if( findNavController()?.currentDestination?.label?.equals("fragment_list")?:false  )
+                findNavController().navigate(R.id.action_listFragment_to_loginFragment)
+
         }
 
 
@@ -65,16 +71,16 @@ class ListFragment : Fragment() {
 
 
         qRscanViewModel.items.observe(viewLifecycleOwner, Observer {
-                result-> adapter.setValues(result.asReversed())
+                result-> adapter.setValues(result.sortedBy { it.time })
 
         })
 
         qRscanViewModel.getState().observe(viewLifecycleOwner, Observer {
-            println("nav dest=" + findNavController()?.currentDestination?.label)
-            println("state=" + it )
-            Log.d("List","state=" + it )
-            if( it == NaviState.WAIT )
-                findNavController().navigate(R.id.action_scanListFragment_to_fullListFragment)
+
+            if( it == NaviState.WAIT && adapter.itemCount > 0 )
+                if( findNavController()?.currentDestination?.label?.equals("fragment_scan_list")?:false  )
+                    findNavController().navigate(R.id.action_scanListFragment_to_listFragment)
+
         })
 
         qRscanViewModel._param.value = "000"
@@ -84,17 +90,6 @@ class ListFragment : Fragment() {
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson
-     * [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
 
 
 }

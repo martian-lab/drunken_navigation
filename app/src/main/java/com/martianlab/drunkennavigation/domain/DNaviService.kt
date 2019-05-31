@@ -17,22 +17,34 @@
 package com.martianlab.drunkennavigation.domain
 
 
+import androidx.lifecycle.LiveData
 import com.martianlab.drunkennavigation.data.db.TochResponse
+import com.martianlab.drunkennavigation.data.db.entities.User
+import com.martianlab.drunkennavigation.domain.tools.ApiResponse
 import retrofit2.Call
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+
 
 /**
  * REST API access points
  */
 interface DNaviService {
 
-    @POST("/")
+    @GET("/")
     fun postValues(
         @Query("token") token: String,
         @Query("user_id") userId: Int,
         @Query("run_guid") runGuid: String,
         @Query("ts") ts: Long,
         @Query("text") test: String
-    ): Call<TochResponse>
+    ): Call<Unit>
+
+
+    //http://dr.tochilov.ru/rest/users/8a4deb84-1686-4a08-b32b-f0cbec5d8940
+
+    @GET("/users/8a4deb84-1686-4a08-b32b-f0cbec5d8940")
+    fun getUsers(): Call<List<User>>
+
 }

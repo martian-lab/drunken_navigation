@@ -91,10 +91,10 @@ class DrunkRepositoryImpl @Inject constructor(
             Points.FINISH ->
                 if( state != NaviState.RUN )
                     return
-                else{
-                    state = NaviState.WAIT
-                    stateLD.value = state
-                }
+//                else{
+//                    state = NaviState.WAIT
+//                    stateLD.value = state
+//                }
 
         }
 
@@ -103,20 +103,22 @@ class DrunkRepositoryImpl @Inject constructor(
 
         appExecutors.diskIO().execute {
             val id = Random.nextLong()
+            println( "guid=" + runGuid )
             val point = Point(id, runGuid!!, Date().time, text, getPointType(text).num )
 
             pointsDao.insert( point )
 
             dNaviService.postValues( TOKEN, userId, runGuid!!, point.time, text ).enqueue( object :
-                Callback<TochResponse> {
-                override fun onFailure(call: Call<TochResponse>, t: Throwable) {
+                Callback<Unit> {
+                override fun onFailure(call: Call<Unit>, t: Throwable) {
 
                     println("on failure, t=" + t.message )
                     //do smth
                 }
 
-                override fun onResponse(call: Call<TochResponse>, response: Response<TochResponse>) {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
 
+                    println("req=" + call.request() )
                     println("on success, response=" + response.message() )
 
                     if (response.isSuccessful()) {
@@ -128,8 +130,17 @@ class DrunkRepositoryImpl @Inject constructor(
 
             })
 
-            if( getPointType(text) == Points.FINISH )
-                runGuid = null
+            appExecutors.mainThread().execute{
+                if( getPointType(text) == Points.FINISH ) {
+                    runGuid = null
+                    state = NaviState.WAIT
+                    stateLD.value = state
+                }
+            }
+
+
+
+
 
         }
 

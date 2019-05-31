@@ -38,18 +38,27 @@ class SendWorker constructor(
             val id = point.id
 
             dNaviService.postValues( TOKEN, 0, point.guid, point.time, point.text ).enqueue( object :
-                Callback<TochResponse> {
-                override fun onFailure(call: Call<TochResponse>, t: Throwable) {
-                    appExecutors.mainThread().execute { Toast.makeText(context,"send failure", Toast.LENGTH_LONG).show() }
+                Callback<Unit> {
+                override fun onFailure(call: Call<Unit>, t: Throwable) {
+                    appExecutors.mainThread().execute {
+                        //Toast.makeText(context,"send failure", Toast.LENGTH_LONG).show()
+                    }
                     //do smth
                 }
 
-                override fun onResponse(call: Call<TochResponse>, response: Response<TochResponse>) {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful()) {
-                        pointsDao.setSent(id)
-                        appExecutors.mainThread().execute { Toast.makeText(context,"send success", Toast.LENGTH_LONG).show() }
+
+                        appExecutors.diskIO().execute { pointsDao.setSent(id) }
+
+                        appExecutors.mainThread().execute {
+
+                            //Toast.makeText(context,"send success", Toast.LENGTH_LONG).show()
+                        }
                     } else {
-                        appExecutors.mainThread().execute { Toast.makeText(context,"send failure", Toast.LENGTH_LONG).show() }
+                        appExecutors.mainThread().execute {
+                            //Toast.makeText(context,"send failure", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
 

@@ -26,14 +26,20 @@ import com.google.gson.stream.JsonReader
 import com.martianlab.drunkennavigation.data.db.USER_DATA_FILENAME
 import com.martianlab.drunkennavigation.data.db.UserDao
 import com.martianlab.drunkennavigation.data.db.entities.User
+import com.martianlab.drunkennavigation.domain.DNaviService
+import com.martianlab.drunkennavigation.domain.tools.ApiSuccessResponse
 import com.martianlab.drunkennavigation.model.tools.AppExecutors
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class UserDatabaseWorker(
     context: Context,
     workerParams: WorkerParameters,
     private val userDao: UserDao,
-    private val appExecutors: AppExecutors
+    private val appExecutors: AppExecutors,
+    private val service: DNaviService
 ) : Worker(context, workerParams) {
 
     private val TAG by lazy { UserDatabaseWorker::class.java.simpleName }
@@ -41,10 +47,29 @@ class UserDatabaseWorker(
     override fun doWork(): Result =
 
         try {
+//            val userList = service.getUsers().enqueue(object :
+//                Callback<List<User>> {
+//                    override fun onFailure(call: Call<List<User>>, t: Throwable) {
+//                        println("error seeding database!" + t.message)
+//                    }
+//
+//                    override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+//                        println("userList=" + response.body())
+//
+//                        appExecutors.networkIO().execute {
+//                            userDao.insertAll(response.body().orEmpty())
+//                        }
+//                        println("success seeding database!")
+//                        Result.success()
+//                    }
+//
+//            })
+//            Result.success()
             applicationContext.assets.open(USER_DATA_FILENAME).use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
                     val userType = object : TypeToken<List<User>>() {}.type
                     val userList: List<User> = Gson().fromJson(jsonReader, userType)
+                    println("userList=" + userList)
 
                     appExecutors.networkIO().execute {
                         userDao.insertAll(userList)

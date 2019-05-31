@@ -20,6 +20,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.room.Room
+import com.android.example.github.util.LiveDataCallAdapterFactory
 import com.martianlab.drunkennavigation.data.db.DrunkNaviDb
 import com.martianlab.drunkennavigation.data.db.PointsDao
 import com.martianlab.drunkennavigation.data.db.UserDao
@@ -37,9 +38,9 @@ class AppModule {
     @Provides
     fun provideDNaviService(): DNaviService {
         return Retrofit.Builder()
-            .baseUrl("https://dr.tochilov.ru/")
+            .baseUrl("http://dr.tochilov.ru/rest/")
             .addConverterFactory(GsonConverterFactory.create())
-            //.addCallAdapterFactory(LiveDataCallAdapterFactory())
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .build()
             .create(DNaviService::class.java)
     }

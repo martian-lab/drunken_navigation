@@ -44,7 +44,8 @@ class SendWorkerFactory : WorkerFactory(){
                 appContext,
                 workerParameters,
                 userDao,
-                appExecutors
+                appExecutors,
+                dNaviService
             )
             else -> throw IllegalArgumentException("wrong worker class")
         }
