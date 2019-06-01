@@ -32,7 +32,7 @@ import retrofit2.http.Query
  */
 interface DNaviService {
 
-    @GET("/")
+    @GET("/rest/")
     fun postValues(
         @Query("token") token: String,
         @Query("user_id") userId: Int,
