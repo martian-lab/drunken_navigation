@@ -4,7 +4,7 @@
     "mime-version": "1.0",
     "content-type": "text/plain; charset=utf-8",
     "content-transfer-encoding": "8bit",
-    "language": "en-US",
+    "language": "ru-RU",
     "plural-forms": "nplurals=2; plural=(n!=1);"
   },
   "translations": {
@@ -15,7 +15,7 @@
            "translator": "Normal string"
         },
         "msgstr": [
-           "Hello"
+           "Привет"
         ]
       },
       "An apple": {
@@ -24,8 +24,8 @@
            "translator": "Plural string"
         },
         "msgstr": [
-           "one apple",
-           "%d apples"
+           "одно яблоко",
+           "%d яблок"
         ]
       }
     }
