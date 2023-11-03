@@ -13,17 +13,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: templates/index.html:4
-msgid "Bienvenue sur Mon Application"
-msgstr ""
+msgid "Welcome to My Application"
+msgstr "Bienvenue sur Mon Application"
 
 #: templates/index.html:7
-msgid "Veuillez vous connecter"
-msgstr ""
+msgid "Please log in"
+msgstr "Veuillez vous connecter"
 
 #: templates/index.html:10
-msgid "Nom d'utilisateur"
-msgstr ""
+msgid "Username"
+msgstr "Nom d'utilisateur"
 
 #: templates/index.html:13
-msgid "Mot de passe"
-msgstr ""
+msgid "Password"
+msgstr "Mot de passe"

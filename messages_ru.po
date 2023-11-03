@@ -13,17 +13,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: templates/index.html:4
-msgid "Добро пожаловать в Мое Приложение"
-msgstr ""
+msgid "Welcome to My Application"
+msgstr "Добро пожаловать в Мое Приложение"
 
 #: templates/index.html:7
-msgid "Пожалуйста, войдите"
-msgstr ""
+msgid "Please log in"
+msgstr "Пожалуйста, войдите"
 
 #: templates/index.html:10
-msgid "Имя пользователя"
-msgstr ""
+msgid "Username"
+msgstr "Имя пользователя"
 
 #: templates/index.html:13
-msgid "Пароль"
-msgstr ""
+msgid "Password"
+msgstr "Пароль"

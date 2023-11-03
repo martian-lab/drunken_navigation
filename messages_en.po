@@ -14,16 +14,16 @@ msgstr ""
 
 #: templates/index.html:4
 msgid "Welcome to My Application"
-msgstr ""
+msgstr "Welcome to My Application"
 
 #: templates/index.html:7
 msgid "Please log in"
-msgstr ""
+msgstr "Please log in"
 
 #: templates/index.html:10
 msgid "Username"
-msgstr ""
+msgstr "Username"
 
 #: templates/index.html:13
 msgid "Password"
-msgstr ""
+msgstr "Password"
