@@ -1,0 +1,13 @@
+{
+  "Имя пользователя": "User name",
+  "Пароль" : "Password",
+  "Войти" : "Enter",
+  "Настройки" : "Settings",
+  "Включить наэкранную клавиатуру" : "Enable on-screen keyboard",
+  "Адрес сервера" : "Server address",
+  "Порт сервера" : "Port",
+  "Версия: " : "ver. ",
+  "Язык интерфейса" : "Interface language",
+  "Темная тема" : "Dark theme",
+  "Station": "Station"
+}
