@@ -9,5 +9,11 @@
   "Версия: " : "ver. ",
   "Язык интерфейса" : "Interface language",
   "Темная тема" : "Dark theme",
-  "Station": "Station"
+  "Station": "Station",
+  "Светлая тема": "Light theme",
+  "Кастомная тема": "Custom theme",
+  "Активировать": "Activate",
+  "Сканировать":"Scan",
+  "Код активации": "Activation code",
+  "Код ресторана": "Restaurant code"
 }
